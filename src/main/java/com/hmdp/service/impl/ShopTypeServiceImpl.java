@@ -32,7 +32,8 @@ public class ShopTypeServiceImpl extends ServiceImpl<ShopTypeMapper, ShopType> i
 
     private static final String SHOP_TYPE_LIST_KEY = "shop:type:list";
     private static final long CACHE_EXPIRE_TIME = 60;
-    @Autowired
+
+    @Resource
     private RedisTemplate<String, List<ShopType>> redisTemplate;
 
 
