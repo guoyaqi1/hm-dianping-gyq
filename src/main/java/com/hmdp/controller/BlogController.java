@@ -32,6 +32,12 @@ public class BlogController {
     @Resource
     private IUserService userService;
 
+    /**
+     *
+     * 发布探店博文
+     * @param blog
+     * @return
+     */
     @PostMapping
     public Result saveBlog(@RequestBody Blog blog) {
         // 获取登录用户
@@ -46,9 +52,11 @@ public class BlogController {
     @PutMapping("/like/{id}")
     public Result likeBlog(@PathVariable("id") Long id) {
         // 修改点赞数量
-        blogService.update()
-                .setSql("liked = liked + 1").eq("id", id).update();
-        return Result.ok();
+//        blogService.update()
+//                .setSql("liked = liked + 1").eq("id", id).update();
+//        return Result.ok();
+        return blogService.likeBlog(id);
+
     }
 
     @GetMapping("/of/me")
@@ -86,5 +94,26 @@ public class BlogController {
     public Result queryBlogById(@PathVariable("id") Long id) {
 
         return blogService.queryBlogById(id);
+    }
+
+    @GetMapping("/like/{id}")
+    public Result queryBlogLikes(@PathVariable("id") Long id) {
+
+        return blogService.queryBlogLikes(id);
+    }
+
+    /**
+     * 查询用户的探店博文
+     * @param current
+     * @param id
+     * @return
+     */
+    @GetMapping("/of/user")
+    public Result queryUserBlog(@RequestParam(value = "current", defaultValue = "1") Integer current,
+                                @RequestParam("id") Long id) {
+        Page<Blog> page = blogService.query()
+                .eq("user_id", id).page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        List<Blog> records = page.getRecords();
+        return Result.ok(records);
     }
 }
